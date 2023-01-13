@@ -1,5 +1,4 @@
 #define CS 10 // CS pin
-#define LED_time 1  //nr of seconds the LED remains lit for
 
 #include <SPI.h> // call library
 
