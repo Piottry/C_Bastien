@@ -6,9 +6,14 @@
 
 
 const char* deviceServiceUuid = "19b10000-e8f2-537e-4f6c-d104768a1214";
+const char* deviceServiceCharacteristicUuid = "19b10001-e8f2-537e-4f6c-d104768a1214";
+
 unsigned long currentTime=0;
 unsigned long previousTime=0;
 bool ledState=LOW;
+
+int mypos=-1;
+int myoldpos=-1;
 
 
 void setup() {
@@ -70,26 +75,44 @@ void controlPeripheral(BLEDevice peripheral) {
     return;
   }
 
+  if (peripheral.discoverAttributes()) {
+    digitalWrite(LEDG,HIGH);
+    delay(500);
+    digitalWrite(LEDG,LOW);
+    delay(500);
+  } else {
+    peripheral.disconnect();
+    return;
+  }
+
+  BLECharacteristic Characteristic = peripheral.characteristic(deviceServiceCharacteristicUuid);
+
 
 
   while (peripheral.connected()) {
-    float X, Y; //variables for X axis, Y axis and buttons
-    JSTK2_read(X, Y); //read data from pmod (the function modifies the parameters
+    float X, Y;
+    JSTK2_read(X, Y);
     delay(200);
     if(X>0.5){
       Serial.println("RIGHT");
+      mypos=1;
+      Characteristic.writeValue((byte)mypos);
     }
     else if(X<-0.5){
       Serial.println("LEFT");
+      mypos=3;
+      Characteristic.writeValue((byte)mypos);
     }
     else if(Y<-0.5){
       Serial.println("DOWN");
+      mypos=2;
+      Characteristic.writeValue((byte)mypos);
     }
     else if(Y>0.5){
       Serial.println("UP");
-  }
-
-  
+      mypos=0;
+      Characteristic.writeValue((byte)mypos);
+    }
   }
   Serial.println("- Peripheral device disconnected!");
 }
