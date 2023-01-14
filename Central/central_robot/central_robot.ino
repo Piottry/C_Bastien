@@ -7,7 +7,7 @@ const char* deviceServiceCharacteristicUuid = "19b10001-e8f2-537e-4f6c-d104768a1
 
 
 BLEService gestureService(deviceServiceUuid); 
-BLEByteCharacteristic gestureCharacteristic(deviceServiceCharacteristicUuid, BLERead | BLEWrite);
+
 
 
 void setup() {
@@ -27,9 +27,6 @@ void setup() {
 
   BLE.setLocalName("Arduino Nano 33 BLE (Peripheral)");
   BLE.setAdvertisedService(gestureService);
-  gestureService.addCharacteristic(gestureCharacteristic);
-  BLE.addService(gestureService);
-  gestureCharacteristic.writeValue(-1);
   BLE.advertise();
 
 }
