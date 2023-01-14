@@ -1,6 +1,8 @@
-
-
 #include <ArduinoBLE.h>
+
+#define CS 10
+
+#include <SPI.h>
 
 
 const char* deviceServiceUuid = "19b10000-e8f2-537e-4f6c-d104768a1214";
@@ -11,12 +13,19 @@ bool ledState=LOW;
 
 void setup() {
   Serial.begin(9600);
-  
+
+  // initialization of SPI port
+  SPI.begin(); 
+  SPI.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
+  delay(100);
+  pinMode(CS, OUTPUT);
+
+
   pinMode(LEDG, OUTPUT);
-  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(LEDR, OUTPUT);
   
   digitalWrite(LEDG, HIGH);
-  digitalWrite(LED_BUILTIN, ledState);
+  digitalWrite(LEDR, HIGH);
 
   if (!BLE.begin()) {
     while (1);
@@ -37,19 +46,19 @@ void connectToPeripheral(){
     peripheral = BLE.available();
   
   if (peripheral) {
+    digitalWrite(LEDR, HIGH);
     BLE.stopScan();
     controlPeripheral(peripheral);
   }
   else{
-    digitalWrite(LEDG,HIGH);
+    //digitalWrite(LEDG,HIGH);
     if((currentTime-previousTime)>500){
       previousTime=currentTime;
       ledState=!ledState;
-      digitalWrite(LED_BUILTIN,!ledState);
+      digitalWrite(LEDG,ledState);
+      digitalWrite(LEDR,ledState);
     }
-
   }
-  
 }
 
 void controlPeripheral(BLEDevice peripheral) {
@@ -63,14 +72,49 @@ void controlPeripheral(BLEDevice peripheral) {
 
 
 
- 
-    
-  
   while (peripheral.connected()) {
-
+    float X, Y; //variables for X axis, Y axis and buttons
+    JSTK2_read(X, Y); //read data from pmod (the function modifies the parameters
+    delay(200);
+    if(X>0.5){
+      Serial.println("RIGHT");
+    }
+    else if(X<-0.5){
+      Serial.println("LEFT");
+    }
+    else if(Y<-0.5){
+      Serial.println("DOWN");
+    }
+    else if(Y>0.5){
+      Serial.println("UP");
+  }
 
   
   }
   Serial.println("- Peripheral device disconnected!");
+}
+
+void JSTK2_read(float& X, float& Y) {
+  byte* data = new byte[5];
+
+  digitalWrite(CS, LOW); // activation of CS line
+  delayMicroseconds(15); // see doc: wait 15us after activation of CS line
+  for (int i = 0; i < 5; i++) { // get 5 bytes of data
+    data[i] = SPI.transfer(0);
+    delayMicroseconds(10); // see doc: wait 10us after sending each data
+  }
+  digitalWrite(CS, HIGH); // deactivation of CS line
+  delay(10);
+
+  X = (data[1] << 8) | data[0]; //recunstruct 10-bit X value
+
+  Y = (data[3] << 8) | data[2]; //recunstruct 10-bit Y value
+  //Normalisation
+  X -= 512;
+  X /= (512 * 1.0);
+  Y -= 512;
+  Y /= (512 * 1.0);
+
+
 }
   

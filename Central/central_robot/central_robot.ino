@@ -4,9 +4,6 @@
 
 const char* deviceServiceUuid = "19b10000-e8f2-537e-4f6c-d104768a1214";
 const char* deviceServiceCharacteristicUuid = "19b10001-e8f2-537e-4f6c-d104768a1214";
-unsigned long currentTime=0;
-unsigned long previousTime=0;
-bool ledState=LOW;
 
 
 BLEService gestureService(deviceServiceUuid); 
@@ -14,16 +11,13 @@ BLEByteCharacteristic gestureCharacteristic(deviceServiceCharacteristicUuid, BLE
 
 
 void setup() {
-  Serial.begin(9600);
-  while (!Serial);  
+  Serial.begin(9600);  
   
   pinMode(LEDR, OUTPUT);
   pinMode(LEDG, OUTPUT);
-  pinMode(LED_BUILTIN, OUTPUT);
   
   digitalWrite(LEDR, LOW);
   digitalWrite(LEDG, HIGH);
-  digitalWrite(LED_BUILTIN, ledState);
 
   
   if (!BLE.begin()) {
@@ -41,19 +35,11 @@ void setup() {
 }
 
 void loop() {
-
-  currentTime=millis();
   BLEDevice central = BLE.central();
 
   if(!central){
     digitalWrite(LEDR, LOW);
     digitalWrite(LEDG, HIGH);
-    if((currentTime-previousTime)>500){
-      Serial.println("- Discovering central device...");
-      previousTime=currentTime;
-      ledState=!ledState;
-      digitalWrite(LED_BUILTIN,!ledState);
-    }
   }
   else if(central) {
     digitalWrite(LEDR, HIGH);
