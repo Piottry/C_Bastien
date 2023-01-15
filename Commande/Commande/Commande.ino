@@ -94,22 +94,18 @@ void controlPeripheral(BLEDevice peripheral) {
     JSTK2_read(X, Y);
     delay(100);
     if(X>0.5){
-      Serial.println("RIGHT");
       mypos=1;
       Characteristic.writeValue((byte)mypos);
     }
     else if(X<-0.5){
-      Serial.println("LEFT");
       mypos=3;
       Characteristic.writeValue((byte)mypos);
     }
     else if(Y<-0.5){
-      Serial.println("DOWN");
       mypos=2;
       Characteristic.writeValue((byte)mypos);
     }
     else if(Y>0.5){
-      Serial.println("UP");
       mypos=0;
       Characteristic.writeValue((byte)mypos);
     }
