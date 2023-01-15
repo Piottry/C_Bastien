@@ -92,7 +92,7 @@ void controlPeripheral(BLEDevice peripheral) {
   while (peripheral.connected()) {
     float X, Y;
     JSTK2_read(X, Y);
-    delay(200);
+    delay(100);
     if(X>0.5){
       Serial.println("RIGHT");
       mypos=1;
