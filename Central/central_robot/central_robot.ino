@@ -31,7 +31,6 @@ void setup() {
 
   
   if (!BLE.begin()) {
-    Serial.println("- Starting Bluetooth® Low Energy module failed!");
     while (1);
   }
 
@@ -54,23 +53,16 @@ void loop() {
   else if(central) {
     digitalWrite(LEDR, HIGH);
     digitalWrite(LEDG, LOW);
-    Serial.println("* Connected to central device!");
-    Serial.print("* Device MAC address: ");
-    Serial.println(central.address());
-    Serial.println(" ");
 
     while (central.connected()) {
       if (Characteristic.written()) {
          mypos = Characteristic.value();
          writeMypos(mypos);
        }
-
-    }
-    Serial.println("* Disconnected to central device!");
-    
+    }   
   }
-  
 }
+
 
 void writeMypos(int mypos){
   switch(mypos){

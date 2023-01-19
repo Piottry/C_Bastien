@@ -1,0 +1,6 @@
+Partie Bluetooth:
+
+-Liaison SPI : https://pecquery.wixsite.com/arduino-passion/la-liaison-spi
+		   https://docs.arduino.cc/learn/communication/spi
+
+-

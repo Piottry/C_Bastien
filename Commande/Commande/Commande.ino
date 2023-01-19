@@ -1,19 +1,18 @@
-#include <ArduinoBLE.h>
+#include <ArduinoBLE.h> 
 
-#define CS 10
+#define CS 10     //"Chip Select" pin that the controller can use to enable or desable the device
 
-#include <SPI.h>
+#include <SPI.h>  //Lbrary for data exchange with the joystick
 
 
-const char* deviceServiceUuid = "19b10000-e8f2-537e-4f6c-d104768a1214";
-const char* deviceServiceCharacteristicUuid = "19b10001-e8f2-537e-4f6c-d104768a1214";
+const char* deviceServiceUuid = "19b10000-e8f2-537e-4f6c-d104768a1214"; //Uuid of the ArduinoBLE of the robot
+const char* deviceServiceCharacteristicUuid = "19b10001-e8f2-537e-4f6c-d104768a1214"; //The Characteristic that the robot is supposed to have (allow data transfer between the 2 Arduino)
 
 unsigned long currentTime=0;
 unsigned long previousTime=0;
 bool ledState=LOW;
 
-int mypos=-1;
-int myoldpos=-1;
+
 
 
 void setup() {
@@ -25,19 +24,19 @@ void setup() {
   delay(100);
   pinMode(CS, OUTPUT);
 
-
+  // Initialization of LED's
   pinMode(LEDG, OUTPUT);
   pinMode(LEDR, OUTPUT);
-  
   digitalWrite(LEDG, HIGH);
   digitalWrite(LEDR, HIGH);
 
-  if (!BLE.begin()) {
+
+  if (!BLE.begin()) { //BLE.begin() Initializes the Bluetooth Low Energy device
     while (1);
   }
   
-  BLE.setLocalName("Nano 33 BLE (Central)"); 
-  BLE.advertise();
+  BLE.setLocalName("Nano 33 BLE (Central)");
+  BLE.advertise();    // Allow other peripheral to detect this one 
 }
 
 void loop() {
@@ -47,16 +46,15 @@ void loop() {
 
 void connectToPeripheral(){
   BLEDevice peripheral;
-    BLE.scanForUuid(deviceServiceUuid);
-    peripheral = BLE.available();
+    BLE.scanForUuid(deviceServiceUuid);   // Scan devices that are advertising with a certain Uuid
+    peripheral = BLE.available(); // Return the discovered device
   
-  if (peripheral) {
-    digitalWrite(LEDR, HIGH);
-    BLE.stopScan();
+  if (peripheral) { // Return true if a peripheral has been found
+    digitalWrite(LEDR, HIGH); // turn off red LED
+    BLE.stopScan();           // We stop the scan since we found our other device
     controlPeripheral(peripheral);
   }
-  else{
-    //digitalWrite(LEDG,HIGH);
+  else{             // If no peripheral found yellow LED blinking
     if((currentTime-previousTime)>500){
       previousTime=currentTime;
       ledState=!ledState;
@@ -65,6 +63,8 @@ void connectToPeripheral(){
     }
   }
 }
+
+
 
 void controlPeripheral(BLEDevice peripheral) {
 
@@ -75,27 +75,26 @@ void controlPeripheral(BLEDevice peripheral) {
     return;
   }
 
-  if (peripheral.discoverAttributes()) {
+  if (peripheral.discoverAttributes()) {    // Discover all of the attribut of the peripheral
     digitalWrite(LEDG,HIGH);
     delay(500);
     digitalWrite(LEDG,LOW);
     delay(500);
-  } else {
+  } else {                                  // If no attribut found disconnect
     peripheral.disconnect();
     return;
   }
 
-  BLECharacteristic Characteristic = peripheral.characteristic(deviceServiceCharacteristicUuid);
-
-
 
   while (peripheral.connected()) {
-    float X, Y;
+    int mypos=-1;   //What we are going to transfer via the Characteristic
+    
+    float X, Y;     //Our Joystick coordinate
     JSTK2_read(X, Y);
-    delay(100);
+    delay(100);     //wait between 2 transfer
     if(X>0.5){
       mypos=1;
-      Characteristic.writeValue((byte)mypos);
+      Characteristic.writeValue((byte)mypos); //send via the Characteristic mypos as a byte
     }
     else if(X<-0.5){
       mypos=3;
@@ -110,30 +109,31 @@ void controlPeripheral(BLEDevice peripheral) {
       Characteristic.writeValue((byte)mypos);
     }
   }
-  Serial.println("- Peripheral device disconnected!");
 }
+
+
 
 void JSTK2_read(float& X, float& Y) {
   byte* data = new byte[5];
 
-  digitalWrite(CS, LOW); // activation of CS line
-  delayMicroseconds(15); // see doc: wait 15us after activation of CS line
-  for (int i = 0; i < 5; i++) { // get 5 bytes of data
-    data[i] = SPI.transfer(0);
-    delayMicroseconds(10); // see doc: wait 10us after sending each data
+  digitalWrite(CS, LOW); // Activation of CS line
+  delayMicroseconds(15);
+  for (int i = 0; i < 5; i++) { // Get 5 bytes of data
+    data[i] = SPI.transfer(0);  // send data
+    delayMicroseconds(10);
   }
-  digitalWrite(CS, HIGH); // deactivation of CS line
+  digitalWrite(CS, HIGH); // Deactivation of CS line
   delay(10);
 
-  X = (data[1] << 8) | data[0]; //recunstruct 10-bit X value
+  X = (data[1] << 8) | data[0]; // Recunstruct 10-bit X value
 
-  Y = (data[3] << 8) | data[2]; //recunstruct 10-bit Y value
+  Y = (data[3] << 8) | data[2]; // Recunstruct 10-bit Y value
+ 
   //Normalisation
   X -= 512;
   X /= (512 * 1.0);
   Y -= 512;
   Y /= (512 * 1.0);
-
 
 }
   
