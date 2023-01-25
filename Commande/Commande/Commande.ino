@@ -86,6 +86,8 @@ void controlPeripheral(BLEDevice peripheral) {
   }
 
 
+  BLECharacteristic Characteristic = peripheral.characteristic(deviceServiceCharacteristicUuid);
+
   while (peripheral.connected()) {
     int mypos=-1;   //What we are going to transfer via the Characteristic
     

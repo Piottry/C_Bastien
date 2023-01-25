@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name "SparkFun-Electromechanical")(type "Legacy")(uri "${KIPRJMOD}/library/SparkFun-Electromechanical.pretty/SparkFun-Electromechanical.lib")(options "")(descr ""))
+)
