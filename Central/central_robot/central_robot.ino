@@ -1,47 +1,83 @@
-#include <Servo.h>
- 
+#include <ArduinoBLE.h>
 
-Servo monservo; //Déclaration de ma classe Servo 
+enum {
+  DIRECTION_NONE = -1,
+  DIRECTION_UP = 0,
+  DIRECTION_RIGHT = 1,
+  DIRECTION_DOWN = 2,
+  DIRECTION_LEFT =3,
+
+};
+      
 
 
-bool etatActuel= false,etatPrecedent = true; //On met l'état précédent en vrai pour éviter la détection de front lors du lancement du programme
+const char* deviceServiceUuid = "19b10000-e8f2-537e-4f6c-d104768a1214";
+const char* deviceServiceCharacteristicUuid = "19b10001-e8f2-537e-4f6c-d104768a1214";
 
-int buton_pin=2,myservo_pin=3; //Les différents pins utiles
+int mypos=-1;
 
-double angle;
+BLEService Service(deviceServiceUuid); 
+BLEByteCharacteristic Characteristic(deviceServiceCharacteristicUuid, BLERead | BLEWrite);
 
 
-void setup()
-{
-  Serial.begin(9600);
-  //On déclare les modes de fonctionnement de nos composants
-  pinMode(buton_pin, INPUT_PULLUP);
+void setup() {
+  Serial.begin(9600);  
   
-  //Le servomoteur est relié au port myservo_pin (port 3)
-  monservo.attach(myservo_pin);
+  pinMode(LEDR, OUTPUT);
+  pinMode(LEDG, OUTPUT);
   
-  //L'angle initial est de 90 °
-  angle=0;
-}
+  digitalWrite(LEDR, LOW);
+  digitalWrite(LEDG, HIGH);
 
-void loop()
-{
-	etatActuel = digitalRead(buton_pin);
-  	bool detecFront=(etatActuel==true)& (etatPrecedent==false);
   
-  	if(detecFront){ //Si le bouton est relâché alors on augmente l'angle de 30°
-    	angle+=30;
-  	}
-  	
-  	//On envoie au servo-moteur l'angle auquel il doit se déplacer
-  	monservo.write(angle);
-  
-    delay(50);
-  	
-  	//Si l'angle dépasse 180° on revient à 0 et on ajoute un tour
-  	if(angle>180){
-    angle=0;
+  if (!BLE.begin()) {
+    while (1);
   }
 
- 	etatPrecedent= etatActuel;
+  BLE.setLocalName("Arduino Nano 33 BLE (Peripheral)");
+  BLE.setAdvertisedService(Service);
+  Service.addCharacteristic(Characteristic);
+  BLE.addService(Service);
+  Characteristic.writeValue(-1);
+  BLE.advertise();
+
+}
+
+void loop() {
+  BLEDevice central = BLE.central();
+
+  if(!central){
+    digitalWrite(LEDR, LOW);
+    digitalWrite(LEDG, HIGH);
+  }
+  else if(central) {
+    digitalWrite(LEDR, HIGH);
+    digitalWrite(LEDG, LOW);
+
+    while (central.connected()) {
+      if (Characteristic.written()) {
+         mypos = Characteristic.value();
+         writeMypos(mypos);
+       }
+    }   
+  }
+}
+
+
+void writeMypos(int mypos){
+  switch(mypos){
+    case DIRECTION_UP:
+      Serial.println("UP");
+      break;
+    case DIRECTION_RIGHT:
+      Serial.println("RIGHT");
+      break;
+    case DIRECTION_DOWN:
+      Serial.println("DOWN");
+      break;
+    case DIRECTION_LEFT:
+      Serial.println("LEFT");
+      break;
+    
+  }
 }
