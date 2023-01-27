@@ -18,7 +18,7 @@ void setup() {
 
   myservo[2][0].attach(2);
   myservo[2][1].attach(3);
-  myservo[2][2].attach(4);
+  myservo[2][2].attach(A4);
 
   myservo[3][0].attach(5);
   myservo[3][1].attach(6);
@@ -34,7 +34,7 @@ if(myvar==true){
   stand();
   delay(5000);
   forward();
-  delay(2000);
+  delay(4000);
   myvar=false;
 }
 
@@ -67,6 +67,7 @@ void stand(){
   }
   for (int i=0;i<4;i++){
     myservo[i][2].write(90);
+    myservo[i][1].write(110);    
     myservo[i][1].write(90);
     delay(100);
   }
@@ -127,6 +128,7 @@ void forward() {
   myservo[3][2].write(90);
   myservo[3][1].write(90);
   delay(1000);
+  
   //allongement patte1
 
   myservo[0][2].write(120);
@@ -136,6 +138,7 @@ void forward() {
   delay(400);
   myservo[0][2].write(20);
   delay(300);
+  myservo[0][1].write(90);
   myservo[0][1].write(50);
 
   delay(1000);
@@ -145,7 +148,7 @@ void forward() {
   myservo[2][2].write(20); 
   myservo[2][1].write(50);
  
-  myservo[0][2].write(115); 
+  myservo[0][2].write(75); 
   myservo[0][1].write(90);
 
   myservo[1][0].write(110); 
@@ -158,9 +161,11 @@ void forward() {
   myservo[1][1].write(135);
 
   delay(400);
-  myservo[1][2].write(60);
+  myservo[1][2].write(90);
+  myservo[1][2].write(20);
   delay(300);
-  myservo[1][1].write(70);
+  myservo[1][1].write(100);
+  myservo[1][1].write(50);
   delay(100);
   
   
@@ -173,15 +178,66 @@ void forward() {
   delay(1000);
 
   //patte 3
-
   
   myservo[2][2].write(120);
   myservo[2][1].write(135);
   delay(300);
   myservo[2][0].write(130);
   delay(400);
+  myservo[2][2].write(100);  
   myservo[2][2].write(90);
+  myservo[2][1].write(100);
   myservo[2][1].write(90);
+
+  delay(1000);  
+
+
+
+
+//avancement corps
+  myservo[3][2].write(20); 
+  myservo[3][1].write(50);
+ 
+  myservo[1][2].write(75); 
+  myservo[1][1].write(90);
+
+  myservo[0][0].write(110); 
+  myservo[2][0].write(110);
+
+  delay(3000);
+
+  //patte 3
+  
+  myservo[2][2].write(120);
+  myservo[2][1].write(135);
+  delay(300);
+  myservo[2][0].write(95);
+  delay(400);
+  myservo[2][2].write(100);  
+  myservo[2][2].write(90);
+  myservo[2][1].write(100);
+  myservo[2][1].write(90);
+
+  delay(3000);
+
+//patte 4
+  myservo[3][2].write(120);
+  myservo[3][1].write(135);
+  delay(100);
+  myservo[3][0].write(70);
+  delay(400);
+  myservo[3][2].write(105);
+  myservo[3][2].write(90);
+  myservo[3][1].write(115);
+  myservo[3][1].write(70);
+  delay(3000);  
+
+  myservo[0][2].write(120);
+  myservo[0][1].write(135);
+  delay(100);  
+
+
+
 
 
 
