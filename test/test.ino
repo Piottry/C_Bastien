@@ -35,6 +35,8 @@ if(myvar==true){
   delay(5000);
   forward();
   delay(4000);
+  forward();
+  delay(4000);
   myvar=false;
 }
 
@@ -118,6 +120,7 @@ void forward() {
   delay(400);
   myservo[0][2].write(90);
   myservo[0][1].write(90);
+  delay(1000);
 
   //patte 4
   myservo[3][2].write(120);
@@ -168,13 +171,6 @@ void forward() {
   myservo[1][1].write(50);
   delay(100);
   
-  
- /* myservo[3][2].write(60); 
-  myservo[3][1].write(70);
-  myservo[1][2].write(90); 
-  myservo[1][1].write(90);*/
-
- 
   delay(1000);
 
   //patte 3
@@ -192,8 +188,6 @@ void forward() {
   delay(1000);  
 
 
-
-
 //avancement corps
   myservo[3][2].write(20); 
   myservo[3][1].write(50);
@@ -204,7 +198,7 @@ void forward() {
   myservo[0][0].write(110); 
   myservo[2][0].write(110);
 
-  delay(3000);
+  delay(1500);
 
   //patte 3
   
@@ -218,7 +212,7 @@ void forward() {
   myservo[2][1].write(100);
   myservo[2][1].write(90);
 
-  delay(3000);
+  delay(1500);
 
 //patte 4
   myservo[3][2].write(120);
@@ -232,9 +226,7 @@ void forward() {
   myservo[3][1].write(70);
   delay(3000);  
 
-  myservo[0][2].write(120);
-  myservo[0][1].write(135);
-  delay(100);  
+   
 
 
 
