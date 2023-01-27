@@ -26,7 +26,7 @@ BLEByteCharacteristic Characteristic(deviceServiceCharacteristicUuid, BLERead | 
 void setup() {
 
   myservo[0][0].attach(8);
-  myservo[0][1].attach(A1);
+  myservo[0][1].attach(A3);
   myservo[0][2].attach(A2);
 
   myservo[1][0].attach(11);
@@ -35,7 +35,7 @@ void setup() {
 
   myservo[2][0].attach(2);
   myservo[2][1].attach(3);
-  myservo[2][2].attach(4);
+  myservo[2][2].attach(A4);
 
   myservo[3][0].attach(5);
   myservo[3][1].attach(6);
@@ -95,7 +95,7 @@ void loop() {
 void writeMypos(int mypos) {
   switch (mypos) {
     case DIRECTION_UP:
-      Serial.println("UP");
+      forward();
       break;
     case DIRECTION_RIGHT:
       Serial.println("RIGHT");
@@ -109,14 +109,14 @@ void writeMypos(int mypos) {
   }
 }
 
-void ini() {
-  for (int i = 0; i < 4; i++) {
-    myservo[i][2].write(0);
-    delay(100);
-    myservo[i][1].write(90);
-    delay(100);
-    myservo[i][0].write(90);
-    delay(100);
+void ini(){
+  for (int i=0;i<4;i++){
+  myservo[i][2].write(0);
+  delay(100);
+  myservo[i][1].write(90);
+  delay(100);
+  myservo[i][0].write(90);
+  delay(100);
   }
 }
 
@@ -135,32 +135,126 @@ void stand() {
 }
 
 void forward() {
-
+//position de depart
   myservo[0][2].write(120);
   myservo[0][1].write(135);
-  delay(50);
-  myservo[0][0].write(45);
   delay(100);
+  myservo[0][0].write(120);
+  delay(400);
   myservo[0][2].write(90);
   myservo[0][1].write(90);
+  delay(1000);
 
   //patte 4
   myservo[3][2].write(120);
   myservo[3][1].write(135);
-  delay(50);
-  myservo[0][0].write(135);
   delay(100);
-  myservo[0][2].write(90);
-  myservo[0][1].write(90);
-
-
+  myservo[3][0].write(70);
+  delay(400);
+  myservo[3][2].write(90);
+  myservo[3][1].write(90);
+  delay(1000);
+  
   //allongement patte1
 
   myservo[0][2].write(120);
   myservo[0][1].write(135);
-  delay(50);
-  myservo[0][0].write(90);
   delay(100);
-  myservo[0][2].write(70);
-  myservo[0][1].write(70);
+  myservo[0][0].write(65);
+  delay(400);
+  myservo[0][2].write(20);
+  delay(300);
+  myservo[0][1].write(90);
+  myservo[0][1].write(50);
+
+  delay(1000);
+
+  //avancement du corps
+  
+  myservo[2][2].write(20); 
+  myservo[2][1].write(50);
+ 
+  myservo[0][2].write(75); 
+  myservo[0][1].write(90);
+
+  myservo[1][0].write(110); 
+  myservo[3][0].write(130);
+
+  delay(1000);
+
+  //ajustement poids patte 2
+  myservo[1][2].write(120);
+  myservo[1][1].write(135);
+
+  delay(400);
+  myservo[1][2].write(90);
+  myservo[1][2].write(20);
+  delay(300);
+  myservo[1][1].write(100);
+  myservo[1][1].write(50);
+  delay(100);
+  
+  delay(1000);
+
+  //patte 3
+  
+  myservo[2][2].write(120);
+  myservo[2][1].write(135);
+  delay(300);
+  myservo[2][0].write(130);
+  delay(400);
+  myservo[2][2].write(100);  
+  myservo[2][2].write(90);
+  myservo[2][1].write(100);
+  myservo[2][1].write(90);
+
+  delay(1000);  
+
+
+//avancement corps
+  myservo[3][2].write(20); 
+  myservo[3][1].write(50);
+ 
+  myservo[1][2].write(75); 
+  myservo[1][1].write(90);
+
+  myservo[0][0].write(110); 
+  myservo[2][0].write(110);
+
+  delay(1500);
+
+  //patte 3
+  
+  myservo[2][2].write(120);
+  myservo[2][1].write(135);
+  delay(300);
+  myservo[2][0].write(95);
+  delay(400);
+  myservo[2][2].write(100);  
+  myservo[2][2].write(90);
+  myservo[2][1].write(100);
+  myservo[2][1].write(90);
+
+  delay(1500);
+
+//patte 4
+  myservo[3][2].write(120);
+  myservo[3][1].write(135);
+  delay(100);
+  myservo[3][0].write(70);
+  delay(400);
+  myservo[3][2].write(105);
+  myservo[3][2].write(90);
+  myservo[3][1].write(115);
+  myservo[3][1].write(70);
+  delay(3000);  
+
+   
+
+
+
+
+
+
+  
 }
