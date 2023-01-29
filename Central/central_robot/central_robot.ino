@@ -98,13 +98,13 @@ void writeMypos(int mypos) {
       forward();
       break;
     case DIRECTION_RIGHT:
-      Serial.println("RIGHT");
+      rotateright();
       break;
     case DIRECTION_DOWN:
-      Serial.println("DOWN");
+      
       break;
     case DIRECTION_LEFT:
-      Serial.println("LEFT");
+      rotateleft();
       break;
   }
 }
@@ -134,16 +134,35 @@ void stand() {
   }
 }
 
-void forward() {
-//position de depart
+void rotateleft(){
+  default_action();
   myservo[0][2].write(120);
   myservo[0][1].write(135);
   delay(100);
-  myservo[0][0].write(120);
+  myservo[0][0].write(135);
   delay(400);
   myservo[0][2].write(90);
   myservo[0][1].write(90);
-  delay(1000);
+  delay(500);
+  myservo[3][2].write(120);
+  myservo[3][1].write(135);
+  delay(100);
+  myservo[3][0].write(135);
+  delay(400);
+  myservo[3][2].write(90);
+  myservo[3][1].write(90);
+  delay(500);
+
+
+}
+void rotateright(){
+  default_action();
+}
+
+void forward() {
+
+  positionnement_action();
+
 
   //patte 4
   myservo[3][2].write(120);
@@ -228,7 +247,7 @@ void forward() {
   myservo[2][2].write(120);
   myservo[2][1].write(135);
   delay(300);
-  myservo[2][0].write(95);
+  myservo[2][0].write(80);
   delay(400);
   myservo[2][2].write(100);  
   myservo[2][2].write(90);
@@ -249,12 +268,37 @@ void forward() {
   myservo[3][1].write(70);
   delay(3000);  
 
-   
-
-
-
-
-
-
   
+}
+
+
+void positionnement_action(){
+  myservo[0][2].write(120);
+  myservo[0][1].write(135);
+  delay(100);
+  myservo[0][0].write(120);
+  delay(400);
+  myservo[0][2].write(90);
+  myservo[0][1].write(90);
+  delay(500);
+}
+
+void default_action(){
+  myservo[0][2].write(120);
+  myservo[0][1].write(135);
+  delay(100);
+  myservo[0][0].write(90);
+  delay(400);
+  myservo[0][2].write(90);
+  myservo[0][1].write(90);
+  delay(500);
+  
+  myservo[3][2].write(120);
+  myservo[3][1].write(135);
+  delay(100);
+  myservo[3][0].write(90);
+  delay(400);
+  myservo[3][2].write(90);
+  myservo[3][1].write(90);
+  delay(500);
 }
