@@ -1,7 +1,7 @@
 #include <ArduinoBLE.h>
 #include <Servo.h>
 
-enum {
+enum {  //Different values received via bluetooth
   DIRECTION_NONE = -1,
   DIRECTION_UP = 0,
   DIRECTION_RIGHT = 1,
@@ -13,10 +13,10 @@ enum {
 Servo myservo[4][3];
 
 
-const char* deviceServiceUuid = "23298108-5bd2-4ca3-ad3b-758a16358bbb";
-const char* deviceServiceCharacteristicUuid = "23298108-5bd2-4ca3-ad3b-758a16358bbb";
+const char* deviceServiceUuid = "23298108-5bd2-4ca3-ad3b-758a16358bbb"; //Uuid of the ArduinoBLE of the robot
+const char* deviceServiceCharacteristicUuid = "23298108-5bd2-4ca3-ad3b-758a16358bbb"; //The Characteristic that the robot is supposed to have (allow data transfer between the 2 Arduino)
 
-int mypos = -1;
+int mypos = -1; //Variable that keeps the information received by Bluetooth
 bool myvar = true;
 
 BLEService Service(deviceServiceUuid);
@@ -25,7 +25,7 @@ BLEByteCharacteristic Characteristic(deviceServiceCharacteristicUuid, BLERead | 
 
 void setup() {
 
-  myservo[0][0].attach(8);
+  myservo[0][0].attach(8);  //Attach the pin 8 to the corresponding Servo
   myservo[0][1].attach(A3);
   myservo[0][2].attach(A2);
 
@@ -42,36 +42,35 @@ void setup() {
   myservo[3][2].attach(7);
 
 
-  Serial.begin(9600);
 
+  //Set the different LED mod
   pinMode(LEDR, OUTPUT);
   pinMode(LEDG, OUTPUT);
-
   digitalWrite(LEDR, LOW);
   digitalWrite(LEDG, HIGH);
 
 
-  if (!BLE.begin()) {
-    while (1)
-      ;
+  if (!BLE.begin()) { //BLE.begin() Initializes the Bluetooth Low Energy device
+    while (1);
   }
 
-  BLE.setLocalName("Arduino Nano 33 BLE (Peripheral)");
+  BLE.setLocalName("Arduino Nano 33 BLE (Peripheral)"); //Set our Nano Name (by using an app who can detect Low Energi device that's the name you gonna see)
   BLE.setAdvertisedService(Service);
   Service.addCharacteristic(Characteristic);
   BLE.addService(Service);
-  Characteristic.writeValue(-1);
-  BLE.advertise();
+  Characteristic.writeValue(-1); //Set the default value of our caracteristic
+  BLE.advertise(); //Allow other peripheral to detect this one 
 }
 
 void loop() {
   BLEDevice central = BLE.central();
 
-  if (!central) {
+  if (!central) { // If no peripheral found 
     ini();
     myvar = true;
     digitalWrite(LEDR, LOW);
     digitalWrite(LEDG, HIGH);
+    
   } else if (central) {
     digitalWrite(LEDR, HIGH);
     digitalWrite(LEDG, LOW);
@@ -84,7 +83,7 @@ void loop() {
       }
       if (myvar == true) {
         stand();
-        delay(2000);
+        delay(1000);
         myvar = false;
       }
     }
@@ -101,7 +100,6 @@ void writeMypos(int mypos) {
       rotateright();
       break;
     case DIRECTION_DOWN:
-      
       break;
     case DIRECTION_LEFT:
       rotateleft();
@@ -212,12 +210,12 @@ void rotateright(){
   }
 }
 
-void forward() {
+void forward() {  //procedure pour avancer
 
   positionnement_action();
 
 
-  //patte 4
+  //patte 3
   myservo[3][2].write(120);
   myservo[3][1].write(135);
   delay(100);
@@ -227,7 +225,7 @@ void forward() {
   myservo[3][1].write(90);
   delay(1000);
   
-  //allongement patte1
+  //allongement patte 0
 
   myservo[0][2].write(120);
   myservo[0][1].write(135);
@@ -254,7 +252,7 @@ void forward() {
 
   delay(1000);
 
-  //ajustement poids patte 2
+  //ajustement poids patte 1
   myservo[1][2].write(120);
   myservo[1][1].write(135);
 
@@ -268,7 +266,7 @@ void forward() {
   
   delay(1000);
 
-  //patte 3
+  //patte 2
   
   myservo[2][2].write(120);
   myservo[2][1].write(135);
@@ -295,7 +293,7 @@ void forward() {
 
   delay(1500);
 
-  //patte 3
+  //patte 2
   
   myservo[2][2].write(120);
   myservo[2][1].write(135);
@@ -309,7 +307,7 @@ void forward() {
 
   delay(1500);
 
-//patte 4
+//patte 3
   myservo[3][2].write(120);
   myservo[3][1].write(135);
   delay(100);
@@ -325,7 +323,7 @@ void forward() {
 }
 
 
-void positionnement_action(){
+void positionnement_action(){ //position du robot lui permettant d'entamer la procedure pour avancer
   myservo[0][2].write(120);
   myservo[0][1].write(135);
   delay(100);
@@ -336,22 +334,41 @@ void positionnement_action(){
   delay(500);
 }
 
-void default_action(){
+void default_action(){  //position par defaut les 4 pattes sont a 90°
+
   myservo[0][2].write(120);
   myservo[0][1].write(135);
   delay(100);
   myservo[0][0].write(90);
-  delay(400);
+  delay(200);
   myservo[0][2].write(90);
   myservo[0][1].write(90);
-  delay(500);
+  delay(100);
   
   myservo[3][2].write(120);
   myservo[3][1].write(135);
   delay(100);
   myservo[3][0].write(90);
-  delay(400);
+  delay(200);
   myservo[3][2].write(90);
   myservo[3][1].write(90);
-  delay(500);
+  delay(100);
+
+  myservo[2][2].write(120);
+  myservo[2][1].write(135);
+  delay(100);
+  myservo[2][0].write(90);
+  delay(200);
+  myservo[2][2].write(90);
+  myservo[2][1].write(90);
+  delay(100);
+
+  myservo[1][2].write(120);
+  myservo[1][1].write(135);
+  delay(100);
+  myservo[1][0].write(90);
+  delay(200);
+  myservo[1][2].write(90);
+  myservo[1][1].write(90);
+  delay(100);
 }

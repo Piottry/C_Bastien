@@ -16,13 +16,12 @@ bool ledState=LOW;
 
 
 void setup() {
-  Serial.begin(9600);
 
   // initialization of SPI port
-  SPI.begin(); 
+  SPI.begin();  //start SPI connection
   SPI.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
   delay(100);
-  pinMode(CS, OUTPUT);
+  pinMode(CS, OUTPUT); //Set the SPI pin to an output
 
   // Initialization of LED's
   pinMode(LEDG, OUTPUT);
@@ -35,7 +34,7 @@ void setup() {
     while (1);
   }
   
-  BLE.setLocalName("Nano 33 BLE (Central)");
+  BLE.setLocalName("Nano 33 BLE (Central)"); //Set our Nano Name (by using an app who can detect Low Energi device that's the name you gonna see)
   BLE.advertise();    // Allow other peripheral to detect this one 
 }
 
@@ -46,8 +45,8 @@ void loop() {
 
 void connectToPeripheral(){
   BLEDevice peripheral;
-    BLE.scanForUuid(deviceServiceUuid);   // Scan devices that are advertising with a certain Uuid
-    peripheral = BLE.available(); // Return the discovered device
+  BLE.scanForUuid(deviceServiceUuid);   // Scan devices that are advertising with a certain Uuid
+  peripheral = BLE.available(); // Return the discovered device
   
   if (peripheral) { // Return true if a peripheral has been found
     digitalWrite(LEDR, HIGH); // turn off red LED
@@ -89,27 +88,24 @@ void controlPeripheral(BLEDevice peripheral) {
   BLECharacteristic Characteristic = peripheral.characteristic(deviceServiceCharacteristicUuid);
 
   while (peripheral.connected()) {
-    int mypos=-1;   //What we are going to transfer via the Characteristic
+    int mypos=-1;   //What we are going to transfer via the Characteristic / default value = -1
     
     float X, Y;     //Our Joystick coordinate
     JSTK2_read(X, Y);
     delay(100);     //wait between 2 transfer
     if(X>0.5){
       mypos=1;
-      Characteristic.writeValue((byte)mypos); //send via the Characteristic mypos as a byte
     }
     else if(X<-0.5){
       mypos=3;
-      Characteristic.writeValue((byte)mypos);
     }
     else if(Y<-0.5){
       mypos=2;
-      Characteristic.writeValue((byte)mypos);
     }
     else if(Y>0.5){
       mypos=0;
-      Characteristic.writeValue((byte)mypos);
     }
+    Characteristic.writeValue((byte)mypos); //send via the Characteristic mypos as a byte
   }
 }
 
