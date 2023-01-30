@@ -11,5 +11,5 @@ Equipment:
 -2 Arduino nano 33 BLE
 -12 Micro Servo 99 SG90
 -Joystick PmodJSTK2
--2 battery
+-2 battery Black Lithium 1000mAh 45C 2S
 -1 Controleur BF12A Bec 2A Pro-Tronik //used instead of a voltage regulator you can use insted a voltage regulator S7V8A
