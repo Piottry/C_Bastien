@@ -13,8 +13,8 @@ enum {
 Servo myservo[4][3];
 
 
-const char* deviceServiceUuid = "19b10000-e8f2-537e-4f6c-d104768a1214";
-const char* deviceServiceCharacteristicUuid = "19b10001-e8f2-537e-4f6c-d104768a1214";
+const char* deviceServiceUuid = "23298108-5bd2-4ca3-ad3b-758a16358bbb";
+const char* deviceServiceCharacteristicUuid = "23298108-5bd2-4ca3-ad3b-758a16358bbb";
 
 int mypos = -1;
 bool myvar = true;
@@ -140,23 +140,76 @@ void rotateleft(){
   myservo[0][1].write(135);
   delay(100);
   myservo[0][0].write(135);
-  delay(400);
+  delay(200);
   myservo[0][2].write(90);
   myservo[0][1].write(90);
-  delay(500);
+  delay(100);
   myservo[3][2].write(120);
   myservo[3][1].write(135);
   delay(100);
   myservo[3][0].write(135);
-  delay(400);
+  delay(200);
   myservo[3][2].write(90);
   myservo[3][1].write(90);
-  delay(500);
-
+  delay(100);
+  myservo[2][2].write(120);
+  myservo[2][1].write(135);
+  delay(100);
+  myservo[2][0].write(135);
+  delay(200);
+  myservo[2][2].write(90);
+  myservo[2][1].write(90);
+  delay(100);
+  myservo[1][2].write(120);
+  myservo[1][1].write(135);
+  delay(100);
+  myservo[1][0].write(135);
+  delay(200);
+  myservo[1][2].write(90);
+  myservo[1][1].write(90);
+  delay(100);
+  for(i=0;i<4;i++){
+    myservo[i][0].write(90);
+  }
 
 }
 void rotateright(){
   default_action();
+  myservo[0][2].write(120);
+  myservo[0][1].write(135);
+  delay(100);
+  myservo[0][0].write(45);
+  delay(200);
+  myservo[0][2].write(90);
+  myservo[0][1].write(90);
+  delay(100);
+  myservo[3][2].write(120);
+  myservo[3][1].write(135);
+  delay(100);
+  myservo[3][0].write(45);
+  delay(200);
+  myservo[3][2].write(90);
+  myservo[3][1].write(90);
+  delay(100);
+  myservo[2][2].write(120);
+  myservo[2][1].write(135);
+  delay(100);
+  myservo[2][0].write(45);
+  delay(200);
+  myservo[2][2].write(90);
+  myservo[2][1].write(90);
+  delay(100);
+  myservo[1][2].write(120);
+  myservo[1][1].write(135);
+  delay(100);
+  myservo[1][0].write(45);
+  delay(200);
+  myservo[1][2].write(90);
+  myservo[1][1].write(90);
+  delay(100);
+  for(i=0;i<4;i++){
+    myservo[i][0].write(90);
+  }
 }
 
 void forward() {

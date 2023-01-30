@@ -5,8 +5,8 @@
 #include <SPI.h>  //Lbrary for data exchange with the joystick
 
 
-const char* deviceServiceUuid = "19b10000-e8f2-537e-4f6c-d104768a1214"; //Uuid of the ArduinoBLE of the robot
-const char* deviceServiceCharacteristicUuid = "19b10001-e8f2-537e-4f6c-d104768a1214"; //The Characteristic that the robot is supposed to have (allow data transfer between the 2 Arduino)
+const char* deviceServiceUuid = "23298108-5bd2-4ca3-ad3b-758a16358bbb"; //Uuid of the ArduinoBLE of the robot
+const char* deviceServiceCharacteristicUuid = "23298108-5bd2-4ca3-ad3b-758a16358bbb"; //The Characteristic that the robot is supposed to have (allow data transfer between the 2 Arduino)
 
 unsigned long currentTime=0;
 unsigned long previousTime=0;
