@@ -71,14 +71,14 @@ void loop() {
     digitalWrite(LEDR, LOW);
     digitalWrite(LEDG, HIGH);
     
-  } else if (central) {
+  } else if (central) { // If peripheral found
     digitalWrite(LEDR, HIGH);
     digitalWrite(LEDG, LOW);
-    ini();
+    ini();  //Initialise robot
     delay(3000);
-    while (central.connected()) {
-      if (Characteristic.written()) {
-        mypos = Characteristic.value();
+    while (central.connected()) { //If peripheral connected
+      if (Characteristic.written()) { //If the Characteristic is modified do something
+        mypos = Characteristic.value(); //store de value
         writeMypos(mypos);
       }
       if (myvar == true) {
@@ -91,7 +91,7 @@ void loop() {
 }
 
 
-void writeMypos(int mypos) {
+void writeMypos(int mypos) {  //Select witch action to do
   switch (mypos) {
     case DIRECTION_UP:
       forward();
@@ -107,9 +107,12 @@ void writeMypos(int mypos) {
   }
 }
 
+
+//We don't need to use millis because we are not supose to interup the robot or it fall
+
 void ini(){
   for (int i=0;i<4;i++){
-  myservo[i][2].write(0);
+  myservo[i][2].write(0); // The servo go to 0°
   delay(100);
   myservo[i][1].write(90);
   delay(100);
